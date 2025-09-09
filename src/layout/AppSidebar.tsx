@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
-import { ChevronDownIcon, DotIcon, GridIcon, PackageIcon, PlugIcon, UserCircleIcon } from "lucide-react";
+import { ChevronDownIcon, DotIcon, GridIcon, PackageIcon, PlugIcon, ReceiptTextIcon, UserCircleIcon } from "lucide-react";
 import SidebarWidget from "./SidebarWidget";
 
 
@@ -24,7 +24,11 @@ const navItems: NavItem[] = [
    {
     icon: <UserCircleIcon />,
     name: "User Profile",
-    path: "/profile",
+    path: "/profile", 
+  },
+    {icon: <ReceiptTextIcon className="h-5 w-5 text-white" />, 
+    name: "income",
+    path: "/dashboard/income",
   },
   
 ];

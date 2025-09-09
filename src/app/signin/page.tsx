@@ -5,77 +5,40 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import apiManager from "../../../apiManager";
+import { useState } from "react";
 import { toast } from 'react-toastify';
-import { TailSpin } from 'react-loading-icons'
+import { TailSpin } from 'react-loading-icons';
 
 export default function SigninPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
 
- const loginAction = async (email: string, password: string) => {
-   const result = await apiManager('/api/auth/login', {
-     method: 'POST',
-      data: {
-       email,
-        password
-     }
-   })
-    setLoading(false)
-   return result
- }
-
-
-  const handleLogin = (email: string, password: string) => {
-    // add auth validation here
+  // Fake login without API
+  const handleLogin = () => {
     setLoading(true);
 
-     //Call API
-    loginAction(email, password)
-      .then(() => {
-        setLoading(false);
-        setSuccess(true);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setError(error);
-      });
-  };
-
-   useEffect(() => {
-    if (success) {
-      // Call Toastify to show success message
-   toast.success("Login successful!");
-
-     setTimeout(() => {
-        // Redirect to dashboard after login
-       router.push("/dashboard");
-       setLoading(false); // Reset success state
-     }, 700);
-   }
-
-    if (error) {
-      // Call Toastify to show wrong message
-     toast.error("Login failed!");
-     setError(null); // Reset error state
+    // simple validation (optional)
+    if (!email || !password) {
+      toast.error("Please enter email and password");
+      setLoading(false);
+      return;
     }
 
-  }, [success, error, router]);
-
+    // simulate login delay
+    setTimeout(() => {
+      toast.success("Login successful!");
+      router.push("/dashboard"); // redirect straight to dashboard
+    }, 800);
+  };
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-8">
       {/* TOP: Navbar row / logo */}
       <div className="w-full flex justify-center items-center px-4 sm:px-6 lg:px-8">
         <div className="overflow-hidden w-full max-w-7xl py-2 flex flex-col lg:flex-row items-center gap-8">
-          {/* LEFT: Logo + Name */}
           <div className="flex-1 w-full flex justify-start">
             <Link href="/" className="flex items-center space-x-2">
               <Image
@@ -94,7 +57,6 @@ export default function SigninPage() {
 
       {/* Login section */}
       <div className="w-full flex justify-center px-4 sm:px-6 lg:px-8">
-        {/* This wrapper reserves full remaining viewport height minus navbar, and centers content */}
         <div className="w-full max-w-7xl min-h-[calc(100dvh-80px)] flex items-center justify-center py-8">
           <div className="w-full rounded-3xl flex flex-col lg:flex-row items-center gap-10 md:gap-20">
             {/* Left side */}
@@ -168,16 +130,13 @@ export default function SigninPage() {
 
                 {/* Login button */}
                 <button
-                  onClick={() => handleLogin(email, password)}
+                  onClick={handleLogin}
                   className="w-full bg-[#1F299C] hover:bg-[#343fb4] text-white font-bold py-3 rounded-full transition mt-4 md:mt-5 disabled:opacity-60"
                   disabled={loading || !email || !password}
                 >
                   {loading ? (
-                    <span
-                      className="w-5 mx-auto h-full justify-center flex"
-                      style={{ height: "calc(3vh)" }}
-                    >
-                      <TailSpin stroke="#fff" strokeWidth="4" color="#fff" />
+                    <span className="w-5 mx-auto h-full justify-center flex">
+                      <TailSpin stroke="#fff" strokeWidth="4" />
                     </span>
                   ) : (
                     "Login"
@@ -199,6 +158,5 @@ export default function SigninPage() {
         </div>
       </div>
     </section>
-
   );
 }
